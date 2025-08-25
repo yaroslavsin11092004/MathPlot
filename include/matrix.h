@@ -20,6 +20,38 @@ class matrix
 			this->store = std::make_shared<std::vector<T>>(row * column, val);
 			this->store_view = std::mdspan<T, std::dextents<size_t, 2>>(this->store->data(), row, column);
 		}
+		matrix(matrix&& other) noexcept : 
+			store(std::move(other.store)), store_view(other.store_view)
+		{
+			if (store)
+				store_view = std::mdspan<T, std::dextents<size_t,2>>(store->data(), store_view.extent(0), store_view.extent(1));
+			other.store_view = std::mdspan<T, std::dextents<size_t,2>>();
+		}
+		matrix& operator=(matrix&& other) noexcept 
+		{
+			if (this != &other)
+			{
+				store = std::move(other.store);
+				store_view = other.store_view;
+				if (store)
+					store_view = std::mdspan<T, std::dextents<size_t, 2>>(store->data(), store_view.extent(0), store_view.extent(1));
+				other.store_view = std::mdspan<T, std::dextents<size_t,2>>();
+			}
+			return *this;
+		}
+		matrix(const matrix& other) noexcept : 
+			store(std::make_shared<std::vector<T>>(*other.store)), store_view(store->data(), other.store_view.extent(0), other.store_view.extent(1)){}
+		matrix& operator=(const matrix& other)
+		{
+			if (this != &other)
+			{
+				store = std::make_shared<std::vector<T>>(*other.store);
+				store_view = std::mdspan<T, std::dextents<size_t, 2>>(store->data(), other.store_view.extent(0), other.store_view.extent(1));
+			}
+			return *this;
+		}
+		explicit matrix() = default;
+		~matrix() = default;
 		[[nodiscard]] auto make_row_acceptor(size_t row) const noexcept
 		{
 			return [this, row](size_t col)->decltype(auto)
@@ -38,7 +70,7 @@ class matrix
 		{
 			for (size_t i = 0; i < val.store->size(); i++)
 			{
-				if (!(i % val.store_view.extent(0))) os << '\n';
+				if (!(i % val.store_view.extent(1)) && i != 0) os << '\n';
 				os << std::fixed << std::setprecision(9) << std::setw(2) << std::left << (*val.store)[i] << " ";
 			}
 			return os;

@@ -6,6 +6,8 @@ struct interpol_param
 	matrix<double> ratios;
 	matrix<double> mesh;
 	bool dir;
+	interpol_param() = default;
+	~interpol_param() = default;
 };
 matrix<double> running(matrix<double>&, matrix<double>&);
 matrix<double> spline_interpolation(matrix<double>&);
