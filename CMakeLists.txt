@@ -26,8 +26,5 @@ set(SOURCE_LIB
 	./source/RungeKutt.cpp
 )
 
-set(SOURCE_EXE ./source/Main.cpp)
-
 add_library(MathPlot SHARED ${SOURCE_LIB})
-add_executable(MathPlotExe ${SOURCE_EXE})
-target_link_libraries(MathPlotExe MathPlot)
+target_link_libraries(MathPlot)
