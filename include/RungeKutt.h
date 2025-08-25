@@ -1,23 +1,25 @@
 #ifndef RUNGEKUTT_H
 #define RUNGEKUTT_H
 #include "interpolation.h"
-#include "Matrix.h"
+#include "matrix.h"
 #include <optional>
 #include <functional>
 #include <memory>
 struct rk_params
 {
-	shared_ptr<vector<function<double(valarray<double>)>>> equations = nullptr;
-	shared_ptr<vector<interpol_param>> param_func = nullptr;
+	std::shared_ptr<std::vector<std::function<double(double,matrix<double>)>>> equations = nullptr;
+	std::shared_ptr<std::vector<interpol_param>> param_func;
+	std::vector<std::pair<size_t,size_t>> param_func_indeces;
 	double t0 = 0.0;
 	double t1 = 0.0;
-	shared_ptr<valarray<double>> u0 = nullptr;
+	std::shared_ptr<matrix<double>> u0 = nullptr;
 	double step = 0.0;
-	shared_ptr<vector<size_t>> indeces = nullptr;
 	bool dir = true;
-	size_t size_var;
+	size_t dim_var = 1;
+	size_t index_var = 1;
 	rk_params() = default;
+	~rk_params() = default;
 };
-using RkRef = optional<reference_wrapper<rk_params>>;
+using RkRef = std::optional<std::reference_wrapper<rk_params>>;
 matrix<double> runge_kutt(RkRef args);
 #endif
