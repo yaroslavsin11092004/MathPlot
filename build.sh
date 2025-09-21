@@ -2,7 +2,7 @@ function build_project()
 {
 	cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ .. 
 	make -j${nproc}
-	find -type f ! -name "*.so" ! -name "MathPlotExe" -delete
+	find -type f ! -name "*.so" -delete
 	rm -rf CMakeFiles
 	rm -rf .cmake
 }

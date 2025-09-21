@@ -4,7 +4,7 @@ matrix<double> runge_kutt(RkRef args)
 	auto cond = [args](double ti)->bool
 	{
 		if (args->get().dir) return ti <= args->get().t1 + args->get().step ? true : false;
-		else return ti >= args->get().t0 - args->get().step ? true : false;
+		else return ti >= args->get().t1 - args->get().step ? true : false;
 	};
 	double mul = args->get().dir == true ? 1 : -1;
 	size_t dim_vec = args->get().u0->size();
@@ -58,6 +58,6 @@ matrix<double> runge_kutt(RkRef args)
 	while(cond(cur[0]));
 	matrix<double> ans(var[0].size(), dim_vec + 1);
 	for (size_t i = 0; i < dim_vec + 1; i++)
-		ans.set_column(i, var[i]);
-	return ans;
+		ans.set_column(i, std::move(var[i]));
+	return std::move(ans);
 }

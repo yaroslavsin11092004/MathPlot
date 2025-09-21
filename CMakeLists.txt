@@ -25,6 +25,5 @@ set(SOURCE_LIB
 	./source/MathAnalys.cpp 
 	./source/RungeKutt.cpp
 )
-
 add_library(MathPlot SHARED ${SOURCE_LIB})
 target_link_libraries(MathPlot)
